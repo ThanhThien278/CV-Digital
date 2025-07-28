@@ -1,7 +1,10 @@
 /** @type {import('next').NextConfig} */
+const isProd = process.env.NODE_ENV === 'production';
+
 const nextConfig = {
-  output: 'export', 
-  basePath: '/CV-Digital',
+  output: 'export',
+  basePath: isProd ? '/CV-Digital' : '',
+  assetPrefix: isProd ? '/CV-Digital/' : '',
 
   eslint: {
     ignoreDuringBuilds: true,
@@ -12,6 +15,6 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;
