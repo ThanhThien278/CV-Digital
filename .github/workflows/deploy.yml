@@ -2,40 +2,39 @@ name: Deploy Next.js to GitHub Pages
 
 on:
   push:
-    branches: [ main ] # Kích hoạt workflow khi có push lên nhánh 'main'
-  # pull_request: # Có thể bỏ comment nếu bạn muốn chạy workflow trên pull requests
-  #   branches: [ main ]
+    branches: [ main ]
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest # Sử dụng môi trường Ubuntu mới nhất
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout # Bước 1: Clone repository
-      uses: actions/checkout@v4 # Sử dụng phiên bản v4 của action checkout
+    - name: Checkout
+      uses: actions/checkout@v4
+      # Không cần 'path: CV-Digital' ở đây vì repo root là nơi cần làm việc
 
-    - name: Setup Node.js # Bước 2: Thiết lập môi trường Node.js
-      uses: actions/setup-node@v4 # Sử dụng phiên bản v4 của action setup-node
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
       with:
-        node-version: '18' # Đặt phiên bản Node.js bạn muốn (phù hợp với dự án của bạn)
-        cache: 'npm' # Kích hoạt cache cho npm để tăng tốc độ cài đặt
+        node-version: '18'
+        cache: 'npm'
+      # Không cần 'working-directory: CV-Digital' ở đây vì action này chạy ở root
 
-    - name: Install dependencies # Bước 3: Cài đặt các gói phụ thuộc
-      run: npm install --legacy-peer-deps # Sử dụng --legacy-peer-deps để tránh lỗi xung đột phụ thuộc
+    - name: Install dependencies # Bước này cần chạy trong thư mục gốc của dự án
+      run: npm install --legacy-peer-deps
+      working-directory: . # <--- THÊM DÒNG NÀY (hoặc bạn có thể bỏ qua nếu npm install mặc định chạy ở root của repo)
 
-    - name: Build Next.js project # Bước 4: Xây dựng dự án Next.js
-      # Với cấu hình "output: 'export'" trong next.config.mjs,
-      # lệnh "npm run build" sẽ tự động tạo các file tĩnh vào thư mục "out/"
-      run: npm run build 
+    - name: Build Next.js project # Bước này cần chạy trong thư mục gốc của dự án
+      run: npm run build
+      working-directory: . # <--- THÊM DÒNG NÀY
 
-    - name: Add .nojekyll file # Bước 5: Thêm file .nojekyll (quan trọng cho GitHub Pages)
-      # File này báo cho GitHub Pages không xử lý trang web bằng Jekyll,
-      # đảm bảo các thư mục bắt đầu bằng dấu gạch dưới không bị bỏ qua.
-      run: touch ./out/.nojekyll 
+    - name: Add .nojekyll file # Bước này cũng cần chạy trong thư mục gốc của dự án
+      run: touch ./out/.nojekyll
+      working-directory: . # <--- THÊM DÒNG NÀY
 
-    - name: Deploy to GitHub Pages # Bước 6: Triển khai lên GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3 # Sử dụng action của peaceiris để triển khai
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }} # Sử dụng GitHub Token được cung cấp tự động
-        publish_dir: ./out # Chỉ định thư mục chứa các file tĩnh đã build để triển khai
-        # publish_branch: gh-pages # Mặc định là gh-pages, có thể thay đổi nếu bạn muốn nhánh khác
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./out # Thư mục 'out' sẽ nằm ở gốc dự án sau khi build
+        # Không cần 'publish_dir: CV-Digital/out' vì 'out' sẽ được tạo ở gốc repo
