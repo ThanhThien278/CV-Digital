@@ -9,31 +9,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout # Bước 1: Clone repository
+    - name: Checkout
       uses: actions/checkout@v4
       
-
-    - name: Setup Node.js # Bước 2: Thiết lập môi trường Node.js
+    - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
         cache: 'npm'
 
-
-    - name: Install dependencies # Bước 3: Cài đặt các gói phụ thuộc
+    - name: Install dependencies
       run: npm install --legacy-peer-deps
-      working-directory: . # <--- DÒNG NÀY RẤT QUAN TRỌNG ĐỂ KHẮC PHỤC LỖI ENOENT
+      working-directory: CV-Digital
 
-    - name: Build Next.js project # Bước 4: Xây dựng dự án Next.js
+    - name: Build Next.js project
       run: npm run build
-      working-directory: . # <--- DÒNG NÀY RẤT QUAN TRỌNG ĐỂ KHẮC PHỤC LỖI ENOENT
+      working-directory: CV-Digital
 
-    - name: Add .nojekyll file # Bước 5: Thêm file .nojekyll (quan trọng cho GitHub Pages)
+    - name: Add .nojekyll file
       run: touch ./out/.nojekyll
-      working-directory: . # <--- DÒNG NÀY RẤT QUAN TRỌNG ĐỂ KHẮC PHỤC LỖI ENOENT
+      working-directory: CV-Digital
 
-    - name: Deploy to GitHub Pages # Bước 6: Triển khai lên GitHub Pages
+    - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./out
+        publish_dir: CV-Digital/out
