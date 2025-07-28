@@ -9,32 +9,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
+    - name: Checkout # Bước 1: Clone repository
       uses: actions/checkout@v4
-      # Không cần 'path: CV-Digital' ở đây vì repo root là nơi cần làm việc
+      
 
-    - name: Setup Node.js
+    - name: Setup Node.js # Bước 2: Thiết lập môi trường Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
         cache: 'npm'
-      # Không cần 'working-directory: CV-Digital' ở đây vì action này chạy ở root
 
-    - name: Install dependencies # Bước này cần chạy trong thư mục gốc của dự án
+
+    - name: Install dependencies # Bước 3: Cài đặt các gói phụ thuộc
       run: npm install --legacy-peer-deps
-      working-directory: . # <--- THÊM DÒNG NÀY (hoặc bạn có thể bỏ qua nếu npm install mặc định chạy ở root của repo)
+      working-directory: . # <--- DÒNG NÀY RẤT QUAN TRỌNG ĐỂ KHẮC PHỤC LỖI ENOENT
 
-    - name: Build Next.js project # Bước này cần chạy trong thư mục gốc của dự án
+    - name: Build Next.js project # Bước 4: Xây dựng dự án Next.js
       run: npm run build
-      working-directory: . # <--- THÊM DÒNG NÀY
+      working-directory: . # <--- DÒNG NÀY RẤT QUAN TRỌNG ĐỂ KHẮC PHỤC LỖI ENOENT
 
-    - name: Add .nojekyll file # Bước này cũng cần chạy trong thư mục gốc của dự án
+    - name: Add .nojekyll file # Bước 5: Thêm file .nojekyll (quan trọng cho GitHub Pages)
       run: touch ./out/.nojekyll
-      working-directory: . # <--- THÊM DÒNG NÀY
+      working-directory: . # <--- DÒNG NÀY RẤT QUAN TRỌNG ĐỂ KHẮC PHỤC LỖI ENOENT
 
-    - name: Deploy to GitHub Pages
+    - name: Deploy to GitHub Pages # Bước 6: Triển khai lên GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./out # Thư mục 'out' sẽ nằm ở gốc dự án sau khi build
-        # Không cần 'publish_dir: CV-Digital/out' vì 'out' sẽ được tạo ở gốc repo
+        publish_dir: ./out
