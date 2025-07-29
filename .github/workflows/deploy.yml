@@ -2,11 +2,17 @@ name: Deploy Next.js to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main ] # Đảm bảo đây là nhánh chính của bạn
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
+    # THÊM PHẦN NÀY VÀO ĐÂY ĐỂ CẤP QUYỀN GHI
+    permissions:
+      contents: write # Cho phép Actions ghi vào repo (để push lên gh-pages)
+      pages: write    # Cần thiết cho GitHub Pages
+      id-token: write # Tốt cho bảo mật và các tính năng tương lai
 
     steps:
     - name: Checkout
@@ -15,11 +21,11 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '18' # Hoặc phiên bản Node.js bạn muốn dùng
         cache: 'npm'
 
     - name: Install dependencies
-      run: npm install --legacy-peer-deps
+      run: npm install --legacy-peer-deps # Giữ nguyên cờ này nếu bạn vẫn gặp lỗi peer dependency
 
     - name: Build Next.js project
       run: npm run build
