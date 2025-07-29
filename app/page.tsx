@@ -120,7 +120,7 @@ export default function CVWebsite() {
           <div className="text-center mb-8 relative">
             <div className="relative inline-block">
               <div className="w-36 h-36 mx-auto mb-4 rounded-full overflow-hidden border-4 border-gradient-to-r from-pink-500 to-purple-600 shadow-2xl hover:scale-105 transition-all duration-500">
-                <img src="/public/avatar.png" alt="Nguyen Thanh Thien" className="w-full h-full object-cover" />
+                <img src="/avtprofile.jpg" alt="Nguyen Thanh Thien" className="w-full h-full object-cover" />
               </div>
               <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center animate-bounce shadow-lg">
                 <Shield className="h-4 w-4 text-white" />
